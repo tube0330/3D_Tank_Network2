@@ -4,14 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 
-// Tank hp가 0 이하일 때 잠시 meshRenderer를 비활성화 하여 5초 후에 다시 활성화
+// Tank hp가 0 이하일 때 잠시 meshRenderer를 비활성화하고 5초 후 다시 활성화
 
 public class TankDamage : MonoBehaviourPun
 {
     public MeshRenderer[] meshRenderer;
     public GameObject explosionPrefab;
     private int InitialHp = 100;            // 초기 hp
-    public int currentHp = 0;               // 현재 hp
+    public int hp = 0;               // 현재 hp
     private readonly string playerTag = "Tank";
     public Canvas hudCanvas;
     public Image hpBar;
@@ -20,7 +20,7 @@ public class TankDamage : MonoBehaviourPun
     {
         meshRenderer = GetComponentsInChildren<MeshRenderer>();
         explosionPrefab = Resources.Load<GameObject>("Explosion");
-        currentHp = InitialHp;
+        hp = InitialHp;
         hpBar.color = Color.green;
     }
 
@@ -33,18 +33,18 @@ public class TankDamage : MonoBehaviourPun
     [PunRPC]
     public void OnDamagePun()
     {
-        if (currentHp > 0)
+        if (hp > 0)
         {
-            currentHp -= 10;
+            hp -= 10;
             HpBarUpdate();
-            if (currentHp <= 0)
+            if (hp <= 0)
                 StartCoroutine(ExplosionTank());
         }
     }
 
     private void HpBarUpdate()          // hp바 ui갱신
     {
-        hpBar.fillAmount = (float)currentHp / InitialHp;
+        hpBar.fillAmount = (float)hp / InitialHp;
         if (hpBar.fillAmount < 0.3f)
             hpBar.color = Color.red;
         else if (hpBar.fillAmount < 0.6f)
@@ -60,7 +60,7 @@ public class TankDamage : MonoBehaviourPun
         SetTankVisible(false);
         hudCanvas.enabled = false;
         yield return new WaitForSeconds(5.0f);
-        currentHp = InitialHp;
+        hp = InitialHp;
         SetTankVisible(true);
         hudCanvas.enabled = true;
         HpBarUpdate();

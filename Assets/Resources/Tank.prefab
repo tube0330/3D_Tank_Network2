@@ -575,7 +575,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshRenderer: []
   explosionPrefab: {fileID: 0}
-  currentHp: 0
+  hp: 0
   hudCanvas: {fileID: 2570759026557909693}
   hpBar: {fileID: 630418624654432657}
 --- !u!1 &659130575620001875
